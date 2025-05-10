@@ -15,8 +15,8 @@ export default function CryptoSignalDashboard() {
   };
 
   useEffect(() => {
-    fetchSignal(symbol); // Initial load
-    const interval = setInterval(() => fetchSignal(symbol), 30000); // Auto-refresh every 30s
+    fetchSignal(symbol); // initial load
+    const interval = setInterval(() => fetchSignal(symbol), 30000); // every 30s
     return () => clearInterval(interval);
   }, [symbol]);
 
@@ -32,10 +32,10 @@ export default function CryptoSignalDashboard() {
         </div>
       </div>
 
-      {/* Dropdown + Live Badge */}
+      {/* Dropdown Selector */}
       <div className="flex items-center space-x-4">
         <select
-          className="max-w-xs px-3 py-2 border border-gray-300 rounded-md"
+          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={symbol}
           onChange={(e) => setSymbol(e.target.value)}
         >
