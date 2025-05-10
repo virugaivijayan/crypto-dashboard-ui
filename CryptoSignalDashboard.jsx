@@ -5,20 +5,21 @@ import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
 
 export default function CryptoSignalDashboard() {
+  const [symbol, setSymbol] = useState("BTCUSDT");
   const [signal, setSignal] = useState(null);
 
-  const fetchSignal = () => {
-    fetch("https://crypto-api-backend-0eni.onrender.com/api/signal/BTCUSDT")
+  const fetchSignal = (sym) => {
+    fetch(`https://crypto-api-backend-0eni.onrender.com/api/signal/${sym}`)
       .then((res) => res.json())
       .then((data) => setSignal(data))
       .catch((err) => console.error("API error:", err));
   };
 
   useEffect(() => {
-    fetchSignal(); // Initial Load
-    const interval = setInterval(fetchSignal, 30000); // 30 seconds
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
+    fetchSignal(symbol);
+    const interval = setInterval(() => fetchSignal(symbol), 30000); // Refresh every 30 sec
+    return () => clearInterval(interval);
+  }, [symbol]);
 
   return (
     <div className="p-6 space-y-6 bg-gray-100 min-h-screen">
@@ -31,9 +32,15 @@ export default function CryptoSignalDashboard() {
         </div>
       </div>
 
+      {/* Symbol Selector */}
       <div className="flex items-center space-x-2">
-        <Input placeholder="Search Coin (e.g. BTCUSDT)" className="max-w-xs" />
-        <Badge variant="outline">⏺️ Auto-Refresh Every 30s</Badge>
+        <Input
+          placeholder="Enter Symbol (e.g. BTCUSDT, XAUUSD, EURUSD)"
+          className="max-w-xs"
+          value={symbol}
+          onChange={(e) => setSymbol(e.target.value.toUpperCase())}
+        />
+        <Badge variant="outline">⏺️ Live: {symbol}</Badge>
       </div>
 
       <Card className="shadow-xl rounded-2xl">
