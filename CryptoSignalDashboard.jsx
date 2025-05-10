@@ -7,11 +7,17 @@ import { Badge } from "../components/ui/badge";
 export default function CryptoSignalDashboard() {
   const [signal, setSignal] = useState(null);
 
-  useEffect(() => {
+  const fetchSignal = () => {
     fetch("https://crypto-api-backend-0eni.onrender.com/api/signal/BTCUSDT")
       .then((res) => res.json())
       .then((data) => setSignal(data))
       .catch((err) => console.error("API error:", err));
+  };
+
+  useEffect(() => {
+    fetchSignal(); // Initial Load
+    const interval = setInterval(fetchSignal, 30000); // 30 seconds
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   return (
@@ -27,7 +33,7 @@ export default function CryptoSignalDashboard() {
 
       <div className="flex items-center space-x-2">
         <Input placeholder="Search Coin (e.g. BTCUSDT)" className="max-w-xs" />
-        <Badge variant="outline">⏺️ Live</Badge>
+        <Badge variant="outline">⏺️ Auto-Refresh Every 30s</Badge>
       </div>
 
       <Card className="shadow-xl rounded-2xl">
@@ -48,4 +54,3 @@ export default function CryptoSignalDashboard() {
     </div>
   );
 }
-
